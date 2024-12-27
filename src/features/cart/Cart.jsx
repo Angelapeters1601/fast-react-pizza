@@ -36,7 +36,6 @@ function Cart() {
       <div>
         <Link to="/order/new">Order pizzas</Link>
         <button>Clear cart </button>
-        <hr />
       </div>
     </div>
   );
