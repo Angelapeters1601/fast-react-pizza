@@ -15,7 +15,7 @@ function Menu() {
   );
 }
 
-// the loader
+// the menu loader
 export const loader = async () => {
   const menu = await getMenu();
   return menu;
