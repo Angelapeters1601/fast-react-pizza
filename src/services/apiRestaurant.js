@@ -1,5 +1,7 @@
 const API_URL = "https://react-fast-pizza-api.onrender.com/api";
 
+/*eslint-disable*/
+
 export async function getMenu() {
   const res = await fetch(`${API_URL}/menu`);
 
@@ -52,3 +54,4 @@ export async function updateOrder(id, updateObj) {
     throw Error("Failed updating your order");
   }
 }
+/*eslint-enable*/

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+/*eslint-disable*/
 
 const fakeCart = [
   {
@@ -42,3 +43,4 @@ function Cart() {
 }
 
 export default Cart;
+/*eslint-enable*/

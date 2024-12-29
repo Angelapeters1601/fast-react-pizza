@@ -5,7 +5,6 @@ function Header() {
     <header>
       <Link to="/">Fast React Pizza Co.</Link>
       <p>Angela</p>
-      <hr />
     </header>
   );
 }

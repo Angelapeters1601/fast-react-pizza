@@ -43,7 +43,7 @@ const order = {
 
 function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
-  /*eslint-enablesable*/
+  /*eslint-disable*/
 
   const {
     id,
@@ -55,7 +55,7 @@ function Order() {
     cart,
   } = order;
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
-  /*eslint-enablesable*/
+  /*eslint-enable*/
 
   return (
     <div>
