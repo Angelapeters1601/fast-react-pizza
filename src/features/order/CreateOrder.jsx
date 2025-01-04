@@ -1,5 +1,6 @@
 /*eslint-disable*/
-import { useState } from "react";
+import { Form, redirect } from "react-router-dom";
+import { createOrder } from "../../services/apiRestaurant.js";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -41,7 +42,8 @@ function CreateOrder() {
 
       <h2>Ready to order? Let`&apos;`s go!</h2>
 
-      <form>
+      {/* <Form method="POST" action="/order/new"> */}
+      <Form method="POST">
         <div>
           <label>First Name </label>
 
@@ -74,11 +76,31 @@ function CreateOrder() {
         </div>
 
         <div>
+          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <button>Order now</button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }
+
+// The action function:
+export const action = async ({ request }) => {
+  const formData = await request.formData(); //formData is provided by the browser.
+  const data = Object.fromEntries(formData);
+  console.log(data);
+
+  // converting order back to object:
+  const order = {
+    ...data,
+    cart: JSON.parse(data.cart),
+    priority: data.priority === "on",
+  };
+  console.log(order);
+
+  // calling createOrder function from apiRestaurant:
+  const newOrder = await createOrder(order);
+  return redirect(`/order/${newOrder.id}`);
+};
 
 export default CreateOrder;
