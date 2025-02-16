@@ -10,6 +10,8 @@ import { clearCart } from '../cart/cartSlice.js'
 import { useState } from 'react'
 import { getTotalCartPrice } from './../cart/cartSlice'
 import { formatCurrency } from './../../utils/helpers'
+import { useDispatch } from 'react-redux'
+import { fetchAddress } from './../user/userSlice'
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -25,6 +27,7 @@ function CreateOrder() {
     const isSubmitting = navigation.state === 'submitting'
 
     const formErrors = useActionData()
+    const dispatch = useDispatch()
 
     const cart = useSelector(getCart)
     const totalCartPrice = useSelector(getTotalCartPrice)
@@ -38,6 +41,9 @@ function CreateOrder() {
             <h2 className="mb-8 text-xl font-semibold">
                 Ready to order? Let's go!
             </h2>
+            <button onClick={() => dispatch(fetchAddress())}>
+                get Position
+            </button>
 
             {/* <Form method="POST" action="/order/new"> */}
             <Form method="POST">
