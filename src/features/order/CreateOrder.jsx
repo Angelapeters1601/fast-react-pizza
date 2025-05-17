@@ -21,7 +21,16 @@ const isValidPhone = (str) =>
 
 function CreateOrder() {
     const [withPriority, setWithPriority] = useState(false)
-    const username = useSelector((state) => state.user.username)
+    const {
+        username,
+        status: addressStatus,
+        position,
+        address,
+        error: errorAddress,
+    } = useSelector((state) => state.user)
+
+    const isLoadingAddress = addressStatus === 'loading'
+
     const navigation = useNavigation()
     // console.log(navigation)
     const isSubmitting = navigation.state === 'submitting'
@@ -41,9 +50,6 @@ function CreateOrder() {
             <h2 className="mb-8 text-xl font-semibold">
                 Ready to order? Let's go!
             </h2>
-            <button onClick={() => dispatch(fetchAddress())}>
-                get Position
-            </button>
 
             {/* <Form method="POST" action="/order/new"> */}
             <Form method="POST">
@@ -76,16 +82,37 @@ function CreateOrder() {
                     </div>
                 </div>
 
-                <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div className="relative mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
                     <label className="sm:basis-40">Address</label>
                     <div className="grow">
                         <input
                             className="input w-full"
                             type="text"
                             name="address"
+                            disabled={isLoadingAddress}
+                            defaultValue={address}
                             required
                         />
+                        {addressStatus === 'error' && (
+                            <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
+                                {errorAddress}
+                            </p>
+                        )}
                     </div>
+                    {!position.latitude && !position.longitude && (
+                        <span className="absolute right-[3px] top-[35px] z-20 sm:top-[3px] md:right-[5px] md:top-[5px]">
+                            <Button
+                                disabled={isLoadingAddress}
+                                type="small"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    dispatch(fetchAddress())
+                                }}
+                            >
+                                get Position
+                            </Button>
+                        </span>
+                    )}
                 </div>
 
                 <div className="mb-12 flex items-center gap-5">
@@ -108,7 +135,20 @@ function CreateOrder() {
                         name="cart"
                         value={JSON.stringify(cart)}
                     />
-                    <Button type="primary" disabled={isSubmitting}>
+
+                    <input
+                        type="hidden"
+                        name="position"
+                        value={
+                            position.longitude && position.latitude
+                                ? `${position.latitude}, ${position.longitude}`
+                                : ''
+                        }
+                    />
+                    <Button
+                        type="primary"
+                        disabled={isSubmitting || isLoadingAddress}
+                    >
                         {isSubmitting
                             ? 'Placing order...'
                             : `Order now for ${formatCurrency(totalPrice)}`}
@@ -121,7 +161,8 @@ function CreateOrder() {
 
 // The action function:
 export const action = async ({ request }) => {
-    const formData = await request.formData() //formData is provided by the browser.
+    const formData = await request.formData()
+    //formData is provided by the browser.
     const data = Object.fromEntries(formData)
     // console.log(data)
 
@@ -131,14 +172,15 @@ export const action = async ({ request }) => {
         cart: JSON.parse(data.cart),
         priority: data.priority === 'true',
     }
-    // console.log(order)
+    console.log(order)
 
     //   handling error in form - validation:
     const errors = {}
     if (!isValidPhone(order.phone))
         errors.phone =
             'Please give us your correct phone number. We might need it to contact you.'
-
+    //if err is found, no new object is created in the server
+    // and we dont get redirected to the order page
     if (Object.keys(errors).length > 0) return errors
 
     // calling createOrder function from apiRestaurant, if no error occurs in the form create new order and redirect
@@ -150,6 +192,7 @@ export const action = async ({ request }) => {
 
     //   redirecting to order.id route:
     return redirect(`/order/${newOrder.id}`)
+    // return null
 }
 
 export default CreateOrder

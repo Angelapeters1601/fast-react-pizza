@@ -7,8 +7,7 @@ import UpdateQuantityItem from '../cart/updateQuantityItem.jsx'
 
 /*eslint-disable*/
 function MenuItem({ pizza }) {
-    const { id, name, unitPrice, quantity, ingredients, soldOut, imageUrl } =
-        pizza
+    const { id, name, unitPrice, quantity, ingredients, soldOut, imageUrl } = pizza
 
     const currentQuantity = useSelector(getCurrentQuantityById(id))
     // console.log(currentQuantity)
