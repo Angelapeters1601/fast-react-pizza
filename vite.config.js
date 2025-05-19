@@ -6,6 +6,9 @@ import eslint from 'vite-plugin-eslint'
 export default defineConfig({
     plugins: [react(), eslint()],
     base: '/fast-react-pizza/',
+    build: {
+        outDir: 'dist',
+    },
     server: {
         historyApiFallback: true,
     },
