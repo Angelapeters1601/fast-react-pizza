@@ -8,6 +8,7 @@ export default defineConfig({
     base: '/fast-react-pizza/',
     build: {
         outDir: 'dist',
+        emptyOutDir: true,
     },
     server: {
         historyApiFallback: true,

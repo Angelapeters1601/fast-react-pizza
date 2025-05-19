@@ -11,40 +11,45 @@ import AppLayout from './ui/AppLayout'
 import Error from './ui/Error'
 import Home from './ui/Home'
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+    [
+        {
+            element: <AppLayout />,
+            errorElement: <Error />,
+            children: [
+                {
+                    path: '/',
+                    element: <Home />,
+                },
+                {
+                    path: '/menu',
+                    element: <Menu />,
+                    loader: menuLoader,
+                    errorElement: <Error />,
+                },
+                {
+                    path: '/cart',
+                    element: <Cart />,
+                },
+                {
+                    path: '/order/new',
+                    element: <CreateOrder />,
+                    action: CreateOrderAction,
+                },
+                {
+                    path: '/order/:orderId',
+                    element: <Order />,
+                    loader: orderLoader,
+                    errorElement: <Error />,
+                    action: updateOrderAction,
+                },
+            ],
+        },
+    ],
     {
-        element: <AppLayout />,
-        errorElement: <Error />,
-        children: [
-            {
-                path: '/',
-                element: <Home />,
-            },
-            {
-                path: '/menu',
-                element: <Menu />,
-                loader: menuLoader,
-                errorElement: <Error />,
-            },
-            {
-                path: '/cart',
-                element: <Cart />,
-            },
-            {
-                path: '/order/new',
-                element: <CreateOrder />,
-                action: CreateOrderAction,
-            },
-            {
-                path: '/order/:orderId',
-                element: <Order />,
-                loader: orderLoader,
-                errorElement: <Error />,
-                action: updateOrderAction,
-            },
-        ],
-    },
-])
+        basename: '/fast-react-pizza',
+    }
+)
 
 function App() {
     return <RouterProvider router={router} />
